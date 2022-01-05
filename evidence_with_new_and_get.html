@@ -1,0 +1,105 @@
+<html>  
+    <head>
+        <script src="js/vue.min.js"></script>
+        <script src="js/axios.min.js"></script>
+        <title>
+           Evidence Example
+        </title>
+    </head>
+    <body>
+        <div id="vue_things">
+            value: <input type="text" v-model="evidence">
+            <button type="button" class="btn btn-success" v-on:click="new_evidence(evidence)">evidence to chain!</button>
+            <br>
+            key: <input type="text" v-model="key">
+            <button type="button" class="btn btn-success" v-on:click="get_evidence(key)">get evidence!</button>
+            <br>
+            evidence on chain: {{evidence_on_chain}}
+            <br>
+            tx id: {{tx_id}}
+        </div>
+        
+        <script>
+            var vue_things=new Vue({
+                el:'#vue_things',
+                data:
+                {
+                    // trans handle info we need
+                    contract_name: "EvidenceFactory",
+                    contract_addr: "0x35c186d56ff34d7a3647bbb074510800d49044a3",
+                    user: "0x1e5f3ce67c698ec7c119b455e1deab69b1c6810e",
+                    group_id: "1",
+                    contract_abi: [{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"addSignatures","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getSigner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"addr","type":"address"}],"name":"getEvidence","outputs":[{"name":"","type":"string"},{"name":"","type":"address[]"},{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"addr","type":"address"}],"name":"verify","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSigners","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"evi","type":"string"}],"name":"newEvidence","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getSignersSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"evidenceSigners","type":"address[]"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"addr","type":"address"}],"name":"newEvidenceEvent","type":"event"}],
+                    //---
+                    evidence: new String(),
+                    key: new String(),
+                    evidence_on_chain: new String(),
+                    tx_id: new String()
+                },
+                methods:
+                {
+                    new_evidence:function(value){
+                        axios({
+                            method:'post',
+                            url:'http://124.251.110.210:5002/WeBASE-Front/trans/handle',
+                            data:
+                            {
+                                "user": vue_things.user,
+                                "contractName": vue_things.contract_name,
+                                "contractAddress": vue_things.contract_addr,
+                                "contractAbi": vue_things.contract_abi,
+                                "groupId" : vue_things.group_id,
+                                // --- ↓ specific ↓ ---
+                                "funcName":"newEvidence",
+                                "funcParam":[value],
+                            },
+                            headers:
+                            {
+                                'Content-Type': 'application/json',
+                            }                             
+                        })
+                        .then(function(response){
+                            vue_things.tx_id = response.data.transactionHash 
+                            vue_things.key = response.data.logs[0].address
+
+                        })
+                        .catch(function(error){
+
+                        })
+                    },
+                    get_evidence:function(key)
+                    {
+                        axios({
+                            method:'post',
+                            url:'http://124.251.110.210:5002/WeBASE-Front/trans/handle',
+                            data:
+                            {
+                                "user": vue_things.user,
+                                "contractName": vue_things.contract_name,
+                                "contractAddress": vue_things.contract_addr,
+                                "contractAbi": vue_things.contract_abi,
+                                "groupId" : vue_things.group_id,
+                                // --- ↓ specific ↓ ---
+                                "funcName":"getEvidence",
+                                
+                                "funcParam":[key],
+                            },
+                            headers:
+                            {
+                                'Content-Type': 'application/json',
+                            }                             
+                        })
+                        .then(function(response){
+                            
+                            vue_things.evidence_on_chain = response.data[0]
+                            console.log(response.data[0])
+                        })
+                        .catch(function(error){
+
+                        })
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

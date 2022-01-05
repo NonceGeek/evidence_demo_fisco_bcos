@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script src="js/vue.min.js"></script>
+    </head>
+    <body>
+        <div id="main">
+            <b>1.0 版存证应用</b> 
+            <select v-model="file_and_src_now">
+                <option v-for="option in file_and_src_list" v-bind:value="option">
+                    {{option[0]}}
+                </option>
+            </select>
+            <button v-on:click="download()">下载页面</button>
+            
+            <br><br>
+            <iframe style="width:100%;height:1000px" v-bind:src="file_and_src_now[1]"></iframe>
+        </div>
+        <script>
+             var main=new Vue({
+                el:'#main',
+                data: {
+                    file_and_src_list: [
+                        ["1. evidence-with-vue", "evidence_with_vue.html", "evidence_with_vue.zip"],
+                        ["2. evidence-with-axios", "evidence_with_axios.html", "evidence_with_axios.zip"],
+                        ["3. evidence-with-new-and-get", "evidence_with_new_and_get.html", "evidence_with_new_and_get.zip"],
+                        ["4. evidence-with-contract-config", "evidence_with_contract_config.html", "evidence_with_contract_config.zip"],
+                        ["5. evidence-with-deploy", "evidence_with_deploy.html", "evidence_with_deploy.zip"],
+                        ["6. evidence-with-bootstrap", "evidence_with_bootstrap.html", "evidence_with_bootstrap.zip"]
+                        ],
+                    file_and_src_now: new Object(),
+                },
+                methods:
+                {
+                    init:function(){
+                        main.file_and_src_now = main.file_and_src_list[0];
+                    },
+                    download:function(){
+                        var eleLink = document.createElement('a');
+                        console.log(main.option);
+                        eleLink.download = main.file_and_src_now[2];
+                        eleLink.href = main.file_and_src_now[2];
+                        eleLink.style.display = 'none';
+                        // https://www.cnblogs.com/kunmomo/p/12917900.html
+                        // 图片转base64地址
+                        // var canvas = document.createElement('canvas');
+                        // var context = canvas.getContext('2d');
+                        // var width = domImg.naturalWidth;
+                        // var height = domImg.naturalHeight;
+                        // context.drawImage(domImg, 0, 0);
+                        // // 如果是PNG图片，则canvas.toDataURL('image/png')
+                        // eleLink.href = canvas.toDataURL('image/jpeg');
+                        // 触发点击
+                        document.body.appendChild(eleLink);
+                        eleLink.click();
+                        
+                        // 然后移除
+                        document.body.removeChild(eleLink);   
+
+                    }
+                }
+            })
+
+            main.init();
+            
+        </script>
+    </body>
+
+</html>

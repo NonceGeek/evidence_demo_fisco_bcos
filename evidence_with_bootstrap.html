@@ -1,0 +1,148 @@
+<html>  
+    <head>
+        <script src="js/vue.min.js"></script>
+        <script src="js/axios.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <link
+        rel="stylesheet"
+        href="css/bootstrap.min.css"/>
+        <title>
+            Super Evidencer
+        </title>
+    </head>
+    <body>
+        <center>
+            <div id="vue_things"  style="width:50%">
+                <br>
+                <h1>Super Evidencer</h1>
+                <br>
+                <div id="contract_config">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Contract Addr:</span>
+                        <input type="text" class="form-control"  placeholder="Contract U want to interact" v-model="contract_addr">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">User:</span>
+                        <input type="text" class="form-control"  placeholder="User U want to use" v-model="user">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Group Id:</span>
+                        <input type="text" class="form-control"  placeholder="Group id of this contract" v-model="group_id">
+                    </div>
+                </div>
+            
+                <hr>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Value:</span>
+                    <input type="text" class="form-control"  placeholder="Evidence u want to set to Blockchain" v-model="evidence">
+                    <button type="button" class="btn btn-warning" v-on:click="new_evidence(evidence)">Evidence to Chain!</button>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Key:</span>
+                    <input type="text" class="form-control"  placeholder="The Key want of the Evidence" v-model="key">
+                    <button type="button" class="btn btn-info" v-on:click="get_evidence(key)">get Evidence!</button>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Evidence on Chain: </span>
+                    <input type="text" readonly="readonly" class="form-control" placeholder="The Evidence U Fetch on Chain" v-model="evidence_on_chain">
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Transaction Id: </span>
+                    <input type="text" readonly="readonly" class="form-control" placeholder="The Evidence U Fetch on Chain" v-model="tx_id">
+                </div>
+                
+            </div>
+        </center>
+        <script>
+            var vue_things=new Vue({
+                el:'#vue_things',
+                data:
+                {
+                    // trans handle info we need
+                    contract_name: "EvidenceFactory",
+                    contract_addr: "0x35c186d56ff34d7a3647bbb074510800d49044a3",
+                    user: "0x1e5f3ce67c698ec7c119b455e1deab69b1c6810e",
+                    group_id: "1",
+                    contract_abi: [{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"addSignatures","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getSigner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"addr","type":"address"}],"name":"getEvidence","outputs":[{"name":"","type":"string"},{"name":"","type":"address[]"},{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"addr","type":"address"}],"name":"verify","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSigners","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"evi","type":"string"}],"name":"newEvidence","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getSignersSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"evidenceSigners","type":"address[]"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"addr","type":"address"}],"name":"newEvidenceEvent","type":"event"}],
+                    //---
+                    evidence: new String(),
+                    key: new String(),
+                    evidence_on_chain: new String(),
+                    tx_id: new String()
+                },
+                methods:
+                {
+                    new_evidence:function(value){
+                        axios({
+                            method:'post',
+                            url:'http://124.251.110.210:5002/WeBASE-Front/trans/handle',
+                            data:
+                            {
+                                "user": vue_things.user,
+                                "contractName": vue_things.contract_name,
+                                "contractAddress": vue_things.contract_addr,
+                                "contractAbi": vue_things.contract_abi,
+                                "groupId" : vue_things.group_id,
+                                // --- ↓ specific ↓ ---
+                                "funcName":"newEvidence",
+                                "funcParam":[value],
+
+
+                            },
+                            headers:
+                            {
+                                'Content-Type': 'application/json',
+                            }                             
+                        })
+                        .then(function(response){
+                            vue_things.tx_id = response.data.transactionHash 
+                            vue_things.key = response.data.logs[0].address
+
+                        })
+                        .catch(function(error){
+
+                        })
+                    },
+                    get_evidence:function(key)
+                    {
+                        axios({
+                            method:'post',
+                            url:'http://124.251.110.210:5002/WeBASE-Front/trans/handle',
+                            data:
+                            {
+                                "user": vue_things.user,
+                                "contractName": vue_things.contract_name,
+                                "contractAddress": vue_things.contract_addr,
+                                "contractAbi": vue_things.contract_abi,
+                                "groupId" : vue_things.group_id,
+                                // --- ↓ specific ↓ ---
+                                "funcName":"getEvidence",
+                                
+                                "funcParam":[key],
+                                
+                            },
+                            headers:
+                            {
+                                'Content-Type': 'application/json',
+                            }                             
+                        })
+                        .then(function(response){
+                            
+                            vue_things.evidence_on_chain = response.data[0]
+                            console.log(response.data[0])
+                        })
+                        .catch(function(error){
+
+                        })
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

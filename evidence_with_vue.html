@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <!--此处我们也可以替换为本地的js文件！-->
+        <script src="js/vue.min.js"></script>
+        <script src="js/axios.min.js"></script>
+        <title>
+            Evidencer
+        </title>
+    </head>
+    <body>
+        <!--vue 框架极简使用套路-->
+        <div id="vue_things">
+            {{sth}}
+            <button type="button" class="btn btn-success" v-on:click="new_evidence(sth)">
+                evidence to chain!
+            </button>
+        </div>
+        <script>
+            // js 
+            var vue_things= new Vue({
+                el: "#vue_things",
+                data:{
+                    sth: "HelloWelight",
+                },
+                methods:
+                {
+                    new_evidence: function(value){
+                        vue_things.sth="new_evidence";
+                    }
+                },
+            })
+        </script>
+    </body>
+</html>

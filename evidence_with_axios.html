@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <!--此处我们也可以替换为本地的js文件！-->
+        <script src="js/vue.min.js"></script>
+        <script src="js/axios.min.js"></script>
+        <title>
+            Evidencer
+        </title>
+    </head>
+    <body>
+        <div id="vue_things">
+            {{sth}}
+            <button type="button" class="btn btn-success" v-on:click="new_evidence(sth)">
+                evidence to chain!
+            </button>
+            <button type="button" class="btn btn-success" v-on:click="get_block_number()">
+                get best block number!
+            </button>
+        </div>
+        <script>
+            var vue_things= new Vue({
+                el: "#vue_things",
+                data:{
+                    sth: "HelloWelight"
+                },
+                methods:
+                {
+                    new_evidence:function(value){
+						vue_things.sth="new_evidence";
+                    },
+                    get_evidence:function(key){
+                    	vue_things.sth="get_evidence";
+                    },
+                    get_block_number:function(){
+                        axios({
+                            method:'get',
+                            url:'http://124.251.110.210:5002/WeBASE-Front/1/web3/blockNumber',
+                            headers:
+                            {
+                                'Content-Type': 'application/json',
+                            }
+                        }).then(function(response){
+                            // do sth
+                            vue_things.sth=response.data;
+                        }).catch(function(error){
+                            // do sth
+                            console.log(error)
+                        })
+                        .catch(function(error){
+                            console.log(error)
+                        })
+                        // axios({
+                        //     method:'get',
+                        //     url:'http://124.251.110.210:5002/WeBASE-Front/1/web3/blockNumber',
+                        //     headers:
+                        //     {
+                        //         'Content-Type': 'application/json',
+                        //     }
+                        // }).then(function(response){
+                        //     // do sth
+                        //     console.log(response)
+                        // }).catch(function(error){
+                        //     // do sth
+                        //     // console.log(error)
+                        // })
+                    }
+                },
+            })
+        </script>
+    </body>
+</html>
