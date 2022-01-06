@@ -26,8 +26,8 @@
                 {
                     // trans handle info we need
                     contract_name: "EvidenceFactory",
-                    contract_addr: "0x35c186d56ff34d7a3647bbb074510800d49044a3",
-                    user: "0x1e5f3ce67c698ec7c119b455e1deab69b1c6810e",
+                    contract_addr: "0x004599366384ed17d035c56c23dc8fe0e3716cba",
+                    user: "0xfca197d7fe71084b28508757f1ad36fbb47e1dc3",
                     group_id: "1",
                     contract_abi: [{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"addSignatures","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"index","type":"uint256"}],"name":"getSigner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"addr","type":"address"}],"name":"getEvidence","outputs":[{"name":"","type":"string"},{"name":"","type":"address[]"},{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"addr","type":"address"}],"name":"verify","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSigners","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"evi","type":"string"}],"name":"newEvidence","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getSignersSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"evidenceSigners","type":"address[]"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"addr","type":"address"}],"name":"newEvidenceEvent","type":"event"}],
                     //---
@@ -41,7 +41,7 @@
                     new_evidence:function(value){
                         axios({
                             method:'post',
-                            url:'http://124.251.110.210:5002/WeBASE-Front/trans/handle',
+                            url:'http://127.0.0.1:5002/WeBASE-Front/trans/handle',
                             data:
                             {
                                 "user": vue_things.user,
@@ -71,7 +71,7 @@
                     {
                         axios({
                             method:'post',
-                            url:'http://124.251.110.210:5002/WeBASE-Front/trans/handle',
+                            url:'http://127.0.0.1:5002/WeBASE-Front/trans/handle',
                             data:
                             {
                                 "user": vue_things.user,
